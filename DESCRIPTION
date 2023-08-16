@@ -1,0 +1,17 @@
+Package: ChatRbot
+Title: A very simple set of R ChatGPT functions
+Version: 0.2
+Authors@R:
+    person("Eduard", "Brüll", , "eduard.bruell@zew.de", role = c("aut", "cre"))
+Description: A very simple API interface to ChatGPT consisting of just three simple functions.
+Imports:
+    purrr,
+    rlang,
+    stringr,
+    glue,
+    jsonlite,
+    httr
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
