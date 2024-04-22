@@ -135,8 +135,8 @@ print_conversation <- function(.c=NULL,.m=NULL){
   int_content <- .m |> purrr::map("content") |> purrr::flatten()
 
   purrr::map2_chr(.x = .m |> purrr::map_chr("role"),
-                  .y = map(int_content,"text") %>%
-                    purrr::discard(is.null) %>%
+                  .y = map(int_content,"text") |>
+                    purrr::discard(is.null) |>
                     map_chr(1),
                   .f = function(name,message){
                     .col <- "white"
