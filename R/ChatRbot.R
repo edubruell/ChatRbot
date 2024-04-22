@@ -301,9 +301,6 @@ chat <- function(.prompt,
   # Append the assistant's message to the history
   message_history <-  c(message_history,list(user_content),list(assistant_content))
   
-  #Add metadata to the message history
-  message_history[[length(message_history)]]$metadata <- metadata
-  
   # Store message metadata in the conversation object
   metadata <- list(
     id = response_decoded$id,
@@ -314,6 +311,9 @@ chat <- function(.prompt,
     output_tokens = response_decoded$usage$output_tokens,
     stop_reason = response_decoded$stop_reason
   )
+  
+  #Add metadata to the message history
+  message_history[[length(message_history)]]$metadata <- metadata
   
   # Update the conversation history in the environment if not temporary
   if (.c != "temporary_convo") {
