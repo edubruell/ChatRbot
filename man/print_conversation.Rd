@@ -2,14 +2,14 @@
 % Please edit documentation in R/ChatRbot.R
 \name{print_conversation}
 \alias{print_conversation}
-\title{Print a chatGPT conversation}
+\title{Print a Claude conversation}
 \usage{
 print_conversation(.c = NULL, .m = NULL)
 }
 \arguments{
 \item{.c}{The conversation to be printed to console}
 
-\item{.m}{A message tree to be printed (Has precedence over .c)}
+\item{.m}{A message list to be printed (Has precedence over .c)}
 }
 \description{
 This function prints a conversation to the console

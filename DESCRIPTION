@@ -1,9 +1,9 @@
 Package: ChatRbot
-Title: A very simple set of R ChatGPT functions
-Version: 0.2
+Title: A very simple set of R functions for the Anthropic Claude API
+Version: 0.3
 Authors@R:
     person("Eduard", "Brüll", , "eduard.bruell@zew.de", role = c("aut", "cre"))
-Description: A very simple API interface to ChatGPT consisting of just three simple functions.
+Description: A very simple API interface to Anthropic Claude consisting of just four simple functions.
 Imports:
     purrr,
     rlang,

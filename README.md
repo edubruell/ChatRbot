@@ -56,7 +56,7 @@ Be creative and think what other wage relevant observables can be in a typical l
 
 If autosave is enabled the conversation is saved in a list in the R enivronment with a name in the pattern of ``convo_as0``,``convo_as1``,``convo_as2``,etc.
 
-You can also set the name of the object manually in the **.c** argument for a new conversation or send a past conversation from an existing object in the current environment to ChatGPT:
+You can also set the name of the object manually in the **.c** argument for a new conversation or send a past conversation from an existing object in the current environment to Claude:
 
 ```r
 #The .c option creates a new object in the parent environment of the call
@@ -94,7 +94,7 @@ with On the Job Search: Theory and Evidence,’’ Econometrica, 74, no. 2
 You can also change different parameters for the Claude conversation such as the systems message or the temperature of the conversation:
 ``` r
 #What does the System message do?
-#ChatGPT takes the role you give it in the system message, but sometimes deviates a little bit more from the system message
+#Claude takes the role you give it in the system message, but sometimes deviates a little bit more from the system message
 chat("Was ist der deutsche Mikrozensus?",
      .sys = "You are a poetic soul and only reply with english 4 verse poems")
 
@@ -103,8 +103,6 @@ chat("Was ist der deutsche Mikrozensus?")
 
 #0 is one extreme where the output becomes fully deterministic. 
 #Else the next token is allways sampled from a list of the most likely tokens. Here only the most likely token is used every time.
-#Sometimes with 0 ChatGPT only exports a stop token. Then you just have to choose something higher 
-#and you can not get decent deterministic answers.
 chat("Was ist der deutsche Mikrozensus?",.temp=0)
 chat("Was ist der deutsche Mikrozensus?",.temp=0) # Same answer
 #If you need deterministic answers that you can describe well in a paper this is probably the way to go.
@@ -144,7 +142,7 @@ library("fixest")
 feols(wage ~ age + csw0(gender,education), example_data, vcov = 'hetero') %>%
   etable()
 
-#Let's add a function .f which console output is also sent to ChatGPT
+#Let's add a function .f which console output is also sent to Claude
 chat("Please give me an interpretation of the results in column 3 of the regression table below. 
       What do the coefficients of the education variable mean? 
       What is the baseline level for education the coefficients compare to?

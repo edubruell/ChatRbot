@@ -2,49 +2,52 @@
 % Please edit documentation in R/ChatRbot.R
 \name{chat}
 \alias{chat}
-\title{Send an API call to chatGPT}
+\title{Chat with one of the Claude models}
 \usage{
 chat(
-  .text,
+  .prompt,
+  .imagefile = NULL,
+  .capture_plot = FALSE,
   .f = function() {
      cat("")
  },
+  .model = NULL,
+  .max_tokens = 1024,
   .v = FALSE,
-  .timeout = 45,
-  .sys = "You are a helpfull assistant, labour economist and proficient R programmer.",
-  .messages = NULL,
-  .no_tree = TRUE,
-  .temp = 0.7,
+  .timeout = 60,
+  .system = NULL,
+  .temperature = 0.7,
   .c = NULL,
-  .auto_save_c = TRUE
+  .print = TRUE,
+  .auto_save = TRUE,
+  .return_history = FALSE
 )
 }
 \arguments{
-\item{.text}{text for the current message to chatgpt}
+\item{.prompt}{The users current}
 
-\item{.f}{Optional place to add a function, that gives it console output directly to ChatGPT}
+\item{.imagefile}{An image to include into the user prompt}
+
+\item{.capture_plot}{Should the last plot be captured and sent to Claude? (Default: FALSE)}
+
+\item{.f}{Optional place to add a function, that gives it console output directly to Claude}
+
+\item{.model}{The claude model to be used for ChatRBot. The default is "claude-3-opus-20240229",}
 
 \item{.v}{Make the current request verbose}
 
 \item{.timeout}{How long to wait after the request times out}
 
-\item{.sys}{The system message (only relevant if no  existing message list is used). Basic setup of ChatGPTs role. Has only minor influence, but is worth to try some things here.}
+\item{.c}{Specify a conversation that is used to save messages or that is continued if it is pre-existing}
 
-\item{.messages}{#Manually supply a message tree as input. This is an alternative to setting .c. If .c is set this arguement does not work}
+\item{.print}{Should the conversation be printed (Default: TRUE)}
 
-\item{.no_tree}{#Should the function return a message tree as output}
-
-\item{.temp}{What sampling temperature to use, between 0 and 2. Higher values make the output more random. With 0 the output is fully deterministic, but likely less good.}
-
-\item{.c}{Specifiy a conversation that is used to save messages or that is conteinued if it is pre-existing}
+\item{.sys}{The system message. Basic setup of Claude's role.}
 
 \item{.auto_save_c}{Should the conversation be auto-saved (only applies if .c is not set manually)}
 
-\item{.model}{The ChatGPT  modelto be used for ChatRBot. The default is "gpt-3.5-turbo",}
-}
-\value{
-A message list in the same format as .messages if .no_tree is set to FALSE
+\item{.temp}{What sampling temperature to use, between 0 and 2. Higher values make the output more random. With 0 the output is fully deterministic, but likely less good.}
 }
 \description{
-This function sends an API call to chatGPT and retries to send out the call if it did not work
+Chat with one of the Claude models
 }
