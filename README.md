@@ -1,5 +1,5 @@
 # ChatRbot
-A minimal implementation of a chatbot from the R Console  based on the ChatGPT API. My personal implementation of chatGPT bot taking heavy inspiration from [jcrodriguez1989/chatgpt](https://github.com/jcrodriguez1989/chatgpt/)
+A simple interface from R to the Anthropic Claude API. This implementation takes some inspiration from [jcrodriguez1989/chatgpt](https://github.com/jcrodriguez1989/chatgpt/) package to communicate with ChatGPT
 
 ## Installation
 Install the development version from
@@ -11,47 +11,47 @@ remotes::install_github("edubruell/ChatRbot")
 ```
 ## Requirements
 
-You need to setup your ChatGPT API key in R.
+You need to setup your Anthropic API key in R.
 
-First you will need to obtain your ChatGPT API key. You can create an
-API key by accessing [OpenAI API
-page](https://beta.openai.com/account/api-keys) -don’t miss their
-article about [Best Practices for API Key
-Safety](https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety)-.
+First you will need to obtain your Anthropic API key. You can create an
+API key in your [Anthropic account settings
+page](https://console.anthropic.com/settings/keys).
 
-Then you have to assign your API key for usage in R, this can be done
-just for the actual session, by doing:
+You should not have your API key directly stored in any source file of a given project.
+However, if you just want to try ChatRbot you can set it with: 
 
 ``` r
-Sys.setenv(OPENAI_API_KEY = "XX-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+Sys.setenv(ANTHROPIC_API_KEY = "XX-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 ```
 
 Or you can do it persistent (session-wide), by assigning it in your
-`.Renviron` file. For it, execute `usethis::edit_r_environ()`, and in
-that file write a line at the end your API key as
+`.Renviron` file. For this, execute `usethis::edit_r_environ()`, and add a
+line  at the end of this file with your API key:
 
 ``` r
-OPENAI_API_KEY=XX-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ANTHROPIC_API_KEY=XX-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-API keys are handled identically to [jcrodriguez1989/chatgpt](https://github.com/jcrodriguez1989/chatgpt/). So using both this package and ChatRbot works seamlessly.
 
 ## Features
 The package comes with three main functions:
-1. ``api_call_chatGPT`` handles the communication with the API in the background
+1. ``anthropic_api_call`` handles the communication with the API in the background
 2. ``print_conversation`` prints out conversations in colour and with some basic formating to the console
 3. ``chat``is the main chat function with a wide range of features such as:
    - Support for saved conversations to the current R environment (including autosaves) and the ability to send prompts to pre-exsisting saved covnersation (See documentation on the **.c** arguement)
    - Ability to send the output of (anonoymous) R functions directly to ChatGPT via the **.f** argument
+   - Ability to send image files to the Claude API
+   - Ability to capture the last plot and send it to the Claude API
+4. ``mc_answer`` allows you to specify **.prompt** and a list of multiple choices **.choices**.The function allways returns one the choices as answer to your prompt
 
 ## Code Examples
 
-Send a simple message a print it an disable autosaving of the conversation.
+Send a simple message.
 ```r
 chat("Give me some R code that creates a random tibble with a simple test dataset with 5000 observations that has a random gender variable,
 a variable for occupational status and a wage variable that is a linear function of gender, occupational status and some other observables.
 Be creative and think what other wage relevant observables can be in a typical large social survey and add some of them into your example code. 
-",.auto_save_c = FALSE)
+")
 ```
 
 If autosave is enabled the conversation is saved in a list in the R enivronment with a name in the pattern of ``convo_as0``,``convo_as1``,``convo_as2``,etc.
@@ -91,14 +91,14 @@ with On the Job Search: Theory and Evidence,’’ Econometrica, 74, no. 2
 (2006), 323–364.",.c="bibtex_example")
 ```
 
-You can also change different parameters for the ChatGPT conversation such as the systems message or the temperature of the conversation:
+You can also change different parameters for the Claude conversation such as the systems message or the temperature of the conversation:
 ``` r
 #What does the System message do?
 #ChatGPT takes the role you give it in the system message, but sometimes deviates a little bit more from the system message
 chat("Was ist der deutsche Mikrozensus?",
-     .sys = "You are a poetic soul and only reply with english 4 verse poems",.no_tree = TRUE)
+     .sys = "You are a poetic soul and only reply with english 4 verse poems")
 
-#Temperature (0.7 is a reasonable standard)
+#Temperature sets the randomness of the answer
 chat("Was ist der deutsche Mikrozensus?")
 
 #0 is one extreme where the output becomes fully deterministic. 
@@ -108,6 +108,7 @@ chat("Was ist der deutsche Mikrozensus?")
 chat("Was ist der deutsche Mikrozensus?",.temp=0)
 chat("Was ist der deutsche Mikrozensus?",.temp=0) # Same answer
 #If you need deterministic answers that you can describe well in a paper this is probably the way to go.
+#For mc_answer .temp=0 is the reasonable default, while it is higher for chat.
 
 #One is the other extreme (most random)
 chat("Was ist der deutsche Mikrozensus?",.temp=1)
@@ -115,10 +116,12 @@ chat("Was ist der deutsche Mikrozensus?",.temp=1)
 
 ```
 
-One nice feature is that you can directly send R console output to ChatGPT. This is really useful to create some quick text descriptions:
+One nice feature is that you can directly send R console output to Claude. This is really useful to create some quick text descriptions:
 ```r
 
-# Some example data to show how passing R outputs to chatGPT works. I wonder how I came up with that :-)
+# Some example data to show how passing R outputs to Claude works. I wonder how I came up with that :-)
+library(tidyverse)
+
 example_data <- tibble(gender              = sample(c("Male", "Female"), 5000, replace = TRUE),
                        occupational_status = sample(c("Employed", "Unemployed", "Student", "Retired"), 5000, replace = TRUE),
                        age                 = rnorm(5000, mean = 35, sd = 10), 
@@ -157,3 +160,44 @@ chat("Please give me an interpretation of the results in column 3 of the regress
          etable()
      })
 ```
+
+Note that you can also disable autosave and get a message list from Claude by 
+setting **.return_history** to `TRUE`:
+```r
+cheese <- chat("Explain why cheese is often yellow",
+               .auto_save = FALSE,
+               .return_history = TRUE,
+               .print = FALSE)
+```
+
+The chat function can also use image files or capture the last plot in the message it send to Claude:
+
+```r
+library(tidyverse)
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  labs(title = "Car Weight vs. Miles per Gallon",
+       x = "Weight (1000 lbs)",
+       y = "Miles per Gallon")
+
+# Call the function with the ggplot and a prompt
+chat(
+  .prompt = "Please analyze the relationship between car weight and miles per gallon based on the provided plot.",
+  .capture_plot = TRUE,
+  .model = "claude-3-opus-20240229",
+  .max_tokens = 100,
+  .temperature = 0.7,
+  .c = "car_analysis_convo"
+)
+```
+The multiple choice function is particularly useful when you want to restrict the type of answer you get from Claude to a fixed vector of 
+examples:
+```r
+# Define the prompt and choices
+prompt <- "What is the capital of France?"
+choices <- c("London", "Paris", "Berlin", "Madrid")
+
+# Call the mc_answer function
+mc_answer(prompt, choices)
+```
+
