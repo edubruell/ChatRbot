@@ -39,7 +39,7 @@ The package comes with three main functions:
 2. ``print_conversation`` prints out conversations in colour and with some basic formating to the console
 3. ``chat``is the main chat function with a wide range of features such as:
    - Support for saved conversations to the current R environment (including autosaves) and the ability to send prompts to pre-exsisting saved covnersation (See documentation on the **.c** arguement)
-   - Ability to send the output of (anonoymous) R functions directly to ChatGPT via the **.f** argument
+   - Ability to send the output of (anonoymous) R functions directly to Claude via the **.f** argument
    - Ability to send image files to the Claude API
    - Ability to capture the last plot and send it to the Claude API
 4. ``mc_answer`` allows you to specify **.prompt** and a list of multiple choices **.choices**.The function allways returns one the choices as answer to your prompt
