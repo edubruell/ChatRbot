@@ -295,7 +295,7 @@ chat <- function(.prompt,
   
   # Call the API with the current message
   response <- c(purge_metadata(message_history),list(user_content)) |> 
-    anthropic_api_call(.model = "claude-3-opus-20240229",
+    anthropic_api_call(.model = .model,
                        .max_tokens = .max_tokens,
                        .temperature = .temperature,
                        .timeout = .timeout,
