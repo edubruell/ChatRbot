@@ -167,8 +167,9 @@ cheese <- chat("Explain why cheese is often yellow",
                .return_history = TRUE,
                .print = FALSE)
 ```
+## Vision
 
-The chat function can also use image files or capture the last plot in the message it send to Claude:
+The `chat` function can also use image files or capture the last plot in the message it send to Claude:
 
 ```r
 library(tidyverse)
@@ -188,6 +189,36 @@ chat(
   .c = "car_analysis_convo"
 )
 ```
+
+## Extracting Text from PDF Files
+
+The `chat` function in the ChatRbot package supports extracting text from PDF files and including it in the prompt sent to the Claude API. This allows you to easily provide context from a PDF document when interacting with the AI assistant.
+
+To use this feature, you need to have the `pdftools` package installed. If it is not already installed, you can install it with:
+
+```r
+install.packages("pdftools")
+```
+
+To include text from a PDF file in your prompt, simply pass the file path to the `.pdffile` argument of the `chat` function:
+
+```r
+chat("Please summarize the key points from the provided PDF document.", 
+     .pdffile = "path/to/your/document.pdf")
+```
+
+The package will automatically extract the text from the PDF file and include it in the prompt sent to the Claude API. The text will be wrapped in `<pdf>` tags to clearly indicate the content from the PDF file:
+
+```
+<pdf filename="document.pdf">
+Extracted text from the PDF file...
+</pdf>
+
+Please summarize the key points from the provided PDF document.
+```
+
+## Multiple choice questions
+
 The multiple choice function is particularly useful when you want to restrict the type of answer you get from Claude to a fixed vector of 
 examples:
 ```r
@@ -198,4 +229,6 @@ choices <- c("London", "Paris", "Berlin", "Madrid")
 # Call the mc_answer function
 mc_answer(prompt, choices)
 ```
+
+
 

@@ -9,6 +9,7 @@ mc_answer(
   .choices,
   .imagefile = NULL,
   .capture_plot = FALSE,
+  .pdffile = NULL,
   .model = "claude-3-opus-20240229",
   .temperature = 0
 )
@@ -21,6 +22,8 @@ mc_answer(
 \item{.imagefile}{An image to include into the user prompt}
 
 \item{.capture_plot}{Should the last plot be captured and sent to Claude? (Default: FALSE)}
+
+\item{.pdffile}{A pdf-file that provides context to the Claude model}
 
 \item{.model}{A character string specifying the Claude model to use (default: "claude-3-opus-20240229").}
 

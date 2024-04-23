@@ -7,6 +7,7 @@
 chat(
   .prompt,
   .imagefile = NULL,
+  .pdffile = NULL,
   .capture_plot = FALSE,
   .f = function() {
      cat("")
@@ -27,6 +28,8 @@ chat(
 \item{.prompt}{The users current}
 
 \item{.imagefile}{An image to include into the user prompt}
+
+\item{.pdffile}{Can add the text of a PDF to the prompt}
 
 \item{.capture_plot}{Should the last plot be captured and sent to Claude? (Default: FALSE)}
 

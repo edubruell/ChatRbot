@@ -135,9 +135,9 @@ print_conversation <- function(.c=NULL,.m=NULL){
   int_content <- .m |> purrr::map("content") |> purrr::flatten()
 
   purrr::map2_chr(.x = .m |> purrr::map_chr("role"),
-                  .y = map(int_content,"text") |>
+                  .y = purrr::map(int_content,"text") |>
                     purrr::discard(is.null) |>
-                    map_chr(1),
+                    purrr::map_chr(1),
                   .f = function(name,message){
                     .col <- "white"
                     if(stringr::str_detect(name,"user")){
@@ -160,6 +160,7 @@ print_conversation <- function(.c=NULL,.m=NULL){
 #'
 #' @param .prompt The users current
 #' @param .imagefile An image to include into the user prompt
+#' @param .pdffile Can add the text of a PDF to the prompt
 #' @param .capture_plot Should the last plot be captured and sent to Claude? (Default: FALSE)
 #' @param .f Optional place to add a function, that gives it console output directly to Claude
 #' @param .model The claude model to be used for ChatRBot. The default is "claude-3-opus-20240229",
@@ -173,6 +174,7 @@ print_conversation <- function(.c=NULL,.m=NULL){
 #' @export
 chat <- function(.prompt,
                  .imagefile      = NULL,                # Optional image file path
+                 .pdffile        = NULL,                # Optional PDF file path
                  .capture_plot   = FALSE,               #Capture a plot to send to Claude models
                  .f              = function(){cat("")}, #Optional place to add a function, that gives it console output directly to ChatGPT
                  .model          = NULL,                #Which model should be used
@@ -189,6 +191,17 @@ chat <- function(.prompt,
   # Validate input prompt
   if (!is.character(.prompt) || length(.prompt) == 0) {
     stop("Prompt must be a non-empty string.")
+  }
+  
+  # Extract text from PDF if provided
+  if (!is.null(.pdffile)) {
+    if (!requireNamespace("pdftools", quietly = TRUE)) {
+      stop("The 'pdftools' package is required to read PDF files. Please install it.")
+    }
+    pdf_text <- pdftools::pdf_text(.pdffile) |> 
+      stringr::str_c(collapse = "\n")
+    pdf_filename <- basename(.pdffile)
+    .prompt <- glue::glue("<pdf filename=\"{pdf_filename}\">\n{pdf_text}\n</pdf>\n\n{.prompt}")
   }
   
   #Build our prompt from the .prompt and the console output of .f
@@ -337,6 +350,7 @@ chat <- function(.prompt,
 #' @param .prompt A character string representing the question or prompt.
 #' @param .choices A character vector of choices for the given prompt.
 #' @param .imagefile An image to include into the user prompt
+#' @param .pdffile  A pdf-file that provides context to the Claude model
 #' @param .capture_plot Should the last plot be captured and sent to Claude? (Default: FALSE)
 #' @param .model A character string specifying the Claude model to use (default: "claude-3-opus-20240229").
 #' @param .temperature A numeric value controlling the randomness of the generated answer (default: 0.0).
@@ -348,6 +362,7 @@ mc_answer <- function(.prompt,
                       .choices, 
                       .imagefile = NULL,
                       .capture_plot = FALSE,
+                      .pdffile        = NULL,                # Optional PDF file path
                       .model = "claude-3-opus-20240229", 
                       .temperature = 0.0) {
   
@@ -357,6 +372,17 @@ mc_answer <- function(.prompt,
   }
   if (!is.character(.choices) || length(.choices) == 0) {
     stop("Choices must be a non-empty character vector.")
+  }
+  
+  # Extract text from PDF if provided
+  if (!is.null(.pdffile)) {
+    if (!requireNamespace("pdftools", quietly = TRUE)) {
+      stop("The 'pdftools' package is required to read PDF files. Please install it.")
+    }
+    pdf_text <- pdftools::pdf_text(.pdffile) |> 
+      stringr::str_c(collapse = "\n")
+    pdf_filename <- basename(.pdffile)
+    .prompt <- glue::glue("<pdf filename=\"{pdf_filename}\">\n{pdf_text}\n</pdf>\n\n{.prompt}")
   }
   
   # Format the prompt and choices
@@ -426,3 +452,4 @@ mc_answer <- function(.prompt,
   # Return the answer
   return(out)
 }
+
