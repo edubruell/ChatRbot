@@ -177,7 +177,7 @@ chat <- function(.prompt,
                  .pdffile        = NULL,                # Optional PDF file path
                  .capture_plot   = FALSE,               #Capture a plot to send to Claude models
                  .f              = function(){cat("")}, #Optional place to add a function, that gives it console output directly to ChatGPT
-                 .model          = NULL,                #Which model should be used
+                 .model          = "claude-3-sonnet-20240229",                #Which model should be used
                  .max_tokens     = 1024,                #What are the max_tokens allowed
                  .v              = FALSE,               #Make the current request verbose
                  .timeout        = 60,                  #How long to wait after the request times out
