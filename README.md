@@ -1,4 +1,6 @@
 # ChatRbot
+> ⚠️ **This package has been superseded by my package [tidyllm](https://github.com/edubruell/tidyllm).** It offers a more advanced and versatile interface for working with various LLMs, including Anthropic Claude. Consider using tidyllm for a more updated experience.
+
 A simple interface from R to the Anthropic Claude API. This implementation takes some inspiration from [jcrodriguez1989/chatgpt](https://github.com/jcrodriguez1989/chatgpt/) package to communicate with ChatGPT
 
 ## Installation
